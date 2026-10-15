@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do Life Dashboard</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+
+    <!-- =====================================================================
+         Theme Toggle (fixed position, always visible)
+    ====================================================================== -->
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme">
+      🌙 Toggle Theme
+    </button>
+
+    <!-- =====================================================================
+         Main layout wrapper
+    ====================================================================== -->
+    <main class="dashboard">
+
+      <!-- =================================================================
+           Greeting Widget
+           Displays: current time, current date, time-based greeting, name setting
+      ================================================================== -->
+      <section id="greeting-widget" class="widget widget--greeting" aria-label="Greeting">
+        <div class="greeting__time" id="greeting-time" aria-live="polite">00:00</div>
+        <div class="greeting__date" id="greeting-date" aria-live="polite"></div>
+        <div class="greeting__message" id="greeting-message" aria-live="polite">Good Morning!</div>
+
+        <form class="greeting__name-form" id="greeting-name-form" novalidate>
+          <label for="greeting-name-input" class="greeting__name-label">Your name</label>
+          <div class="greeting__name-controls">
+            <input
+              type="text"
+              id="greeting-name-input"
+              class="greeting__name-input"
+              placeholder="Enter your name"
+              maxlength="50"
+              aria-describedby="greeting-name-error"
+            />
+            <button type="submit" class="btn btn--save" id="greeting-name-save">Save</button>
+          </div>
+          <span id="greeting-name-error" class="validation-message" role="alert" aria-live="assertive"></span>
+        </form>
+      </section>
+
+      <!-- =================================================================
+           Pomodoro Timer Widget
+           Displays: countdown (MM:SS), state controls, duration setting, alert
+      ================================================================== -->
+      <section id="timer-widget" class="widget widget--timer" aria-label="Pomodoro Timer">
+        <h2 class="widget__title">Focus Timer</h2>
+
+        <div class="timer__display" id="timer-display" aria-live="polite" aria-atomic="true">25:00</div>
+
+        <div class="timer__controls" role="group" aria-label="Timer controls">
+          <button type="button" class="btn btn--primary" id="timer-start">Start</button>
+          <button type="button" class="btn btn--secondary" id="timer-stop">Stop</button>
+          <button type="button" class="btn btn--secondary" id="timer-reset">Reset</button>
+        </div>
+
+        <div class="timer__alert" id="timer-alert" role="alert" aria-live="assertive" hidden>
+          <span id="timer-alert-message">Session complete!</span>
+          <button type="button" class="btn btn--small" id="timer-alert-dismiss" aria-label="Dismiss alert">✕</button>
+        </div>
+
+        <form class="timer__duration-form" id="timer-duration-form" novalidate>
+          <label for="timer-duration-input" class="timer__duration-label">
+            Session duration (minutes, 1–90)
+          </label>
+          <div class="timer__duration-controls">
+            <input
+              type="number"
+              id="timer-duration-input"
+              class="timer__duration-input"
+              min="1"
+              max="90"
+              step="1"
+              value="25"
+              aria-describedby="timer-duration-error"
+            />
+            <button type="submit" class="btn btn--save" id="timer-duration-save">Save</button>
+          </div>
+          <span id="timer-duration-error" class="validation-message" role="alert" aria-live="assertive"></span>
+        </form>
+      </section>
+
+      <!-- =================================================================
+           To-Do List Widget
+           Displays: task input/submit, task list
+      ================================================================== -->
+      <section id="todo-widget" class="widget widget--todo" aria-label="To-Do List">
+        <h2 class="widget__title">To-Do List</h2>
+
+        <form class="todo__add-form" id="todo-add-form" novalidate>
+          <label for="todo-input" class="sr-only">New task</label>
+          <div class="todo__add-controls">
+            <input
+              type="text"
+              id="todo-input"
+              class="todo__input"
+              placeholder="Add a new task…"
+              maxlength="255"
+              aria-describedby="todo-add-error"
+            />
+            <button type="submit" class="btn btn--primary" id="todo-add-btn">Add</button>
+          </div>
+          <span id="todo-add-error" class="validation-message" role="alert" aria-live="assertive"></span>
+        </form>
+
+        <ul class="todo__list" id="todo-list" aria-label="Task list" aria-live="polite">
+          <!-- Task items rendered by TodoModule.renderList() -->
+        </ul>
+      </section>
+
+      <!-- =================================================================
+           Quick Links Widget
+           Displays: label + URL inputs, submit, quick-link buttons
+      ================================================================== -->
+      <section id="quicklinks-widget" class="widget widget--quicklinks" aria-label="Quick Links">
+        <h2 class="widget__title">Quick Links</h2>
+
+        <form class="quicklinks__add-form" id="quicklinks-add-form" novalidate>
+          <div class="quicklinks__form-row">
+            <label for="quicklinks-label-input" class="quicklinks__label">Label</label>
+            <input
+              type="text"
+              id="quicklinks-label-input"
+              class="quicklinks__input"
+              placeholder="e.g. GitHub"
+              maxlength="100"
+              aria-describedby="quicklinks-label-error"
+            />
+            <span id="quicklinks-label-error" class="validation-message" role="alert" aria-live="assertive"></span>
+          </div>
+          <div class="quicklinks__form-row">
+            <label for="quicklinks-url-input" class="quicklinks__label">URL</label>
+            <input
+              type="url"
+              id="quicklinks-url-input"
+              class="quicklinks__input"
+              placeholder="https://example.com"
+              maxlength="2048"
+              aria-describedby="quicklinks-url-error"
+            />
+            <span id="quicklinks-url-error" class="validation-message" role="alert" aria-live="assertive"></span>
+          </div>
+          <button type="submit" class="btn btn--primary" id="quicklinks-add-btn">Add Link</button>
+        </form>
+
+        <div class="quicklinks__list" id="quicklinks-list" aria-label="Quick links" aria-live="polite">
+          <!-- Quick link buttons rendered by QuickLinksModule.renderLinks() -->
+        </div>
+      </section>
+
+    </main><!-- /.dashboard -->
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
