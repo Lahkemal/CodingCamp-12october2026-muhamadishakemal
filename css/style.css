@@ -1,0 +1,570 @@
+/* =========================================================================
+   To-Do Life Dashboard — Main Stylesheet
+   =========================================================================
+   Architecture:
+   - CSS Custom Properties on :root drive the light theme (default)
+   - Overrides on html.theme-dark drive the dark theme
+   - No inline styles for theming; ThemeModule toggles the class on <html>
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   CSS Custom Properties — Light Theme (default)
+   ------------------------------------------------------------------------- */
+:root {
+  /* Color palette */
+  --color-bg:             #f5f5f5;
+  --color-surface:        #ffffff;
+  --color-text-primary:   #1a1a1a;
+  --color-text-secondary: #555555;
+  --color-accent:         #4a6fa5;
+  --color-border:         #dddddd;
+  --color-done-text:      #999999;
+
+  /* Typography */
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
+  --font-size-base:  1rem;
+  --line-height-base: 1.5;
+
+  /* Spacing scale */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+
+  /* Borders & radii */
+  --border-width:  1px;
+  --border-radius: 0.5rem;
+  --border-radius-sm: 0.25rem;
+
+  /* Shadows */
+  --shadow-widget: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  /* Transitions */
+  --transition-theme: background-color 0.25s ease, color 0.25s ease,
+                      border-color 0.25s ease;
+}
+
+/* -------------------------------------------------------------------------
+   CSS Custom Properties — Dark Theme Override
+   ------------------------------------------------------------------------- */
+html.theme-dark {
+  --color-bg:             #1a1a2e;
+  --color-surface:        #16213e;
+  --color-text-primary:   #e0e0e0;
+  --color-text-secondary: #a0a0b0;
+  --color-accent:         #7eb8f7;
+  --color-border:         #2a2a4a;
+  --color-done-text:      #555577;
+
+  --shadow-widget: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* -------------------------------------------------------------------------
+   Box-Sizing Reset
+   ------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Base — html & body
+   ------------------------------------------------------------------------- */
+html {
+  /* Smooth color transition on theme switch (Requirement 13.3) */
+  transition: var(--transition-theme);
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  transition: var(--transition-theme);
+}
+
+/* -------------------------------------------------------------------------
+   Accessibility — Screen-reader only utility (used on sr-only labels)
+   ------------------------------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Layout — Dashboard container
+   ------------------------------------------------------------------------- */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--space-lg);
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+  /* Leave room at the top so the fixed theme toggle doesn't overlap content */
+  padding-top: calc(var(--space-xl) + 3rem);
+}
+
+/* -------------------------------------------------------------------------
+   Widget — Base card styles
+   ------------------------------------------------------------------------- */
+.widget {
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-widget);
+  transition: var(--transition-theme);
+}
+
+.widget__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-md);
+  border-bottom: var(--border-width) solid var(--color-border);
+  padding-bottom: var(--space-sm);
+}
+
+/* -------------------------------------------------------------------------
+   Theme Toggle — Fixed position, always visible (Requirement 13.1)
+   ID selector ensures the button is fixed regardless of any class override.
+   ------------------------------------------------------------------------- */
+#theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: var(--space-md);
+  right: var(--space-md);
+  z-index: 1000;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 0.875rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-widget);
+  transition: var(--transition-theme);
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  background-color: var(--color-accent);
+  color: var(--color-surface);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------------------
+   Buttons — Base and variants
+   ------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  border-radius: var(--border-radius-sm);
+  border: var(--border-width) solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease,
+              border-color 0.15s ease;
+}
+
+.btn--primary {
+  background-color: var(--color-accent);
+  color: var(--color-surface);
+  border-color: var(--color-accent);
+}
+
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  filter: brightness(1.1);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn--secondary {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+.btn--secondary:hover,
+.btn--secondary:focus-visible {
+  background-color: var(--color-border);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn--save {
+  background-color: var(--color-accent);
+  color: var(--color-surface);
+  border-color: var(--color-accent);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 0.8125rem;
+}
+
+.btn--save:hover,
+.btn--save:focus-visible {
+  filter: brightness(1.1);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn--small {
+  padding: 2px var(--space-xs);
+  font-size: 0.75rem;
+  border-radius: var(--border-radius-sm);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+
+.btn--small:hover,
+.btn--small:focus-visible {
+  background-color: var(--color-border);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------------------
+   Form inputs — shared base
+   ------------------------------------------------------------------------- */
+input[type="text"],
+input[type="url"],
+input[type="number"] {
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition-theme), border-color 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-color: var(--color-accent);
+}
+
+input[type="text"]::placeholder,
+input[type="url"]::placeholder {
+  color: var(--color-text-secondary);
+}
+
+/* -------------------------------------------------------------------------
+   Validation messages — inline error/warning text
+   ------------------------------------------------------------------------- */
+.validation-message {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--color-accent);
+  margin-top: var(--space-xs);
+  min-height: 1.2em; /* reserve space so layout does not shift */
+}
+
+/* -------------------------------------------------------------------------
+   Greeting Widget
+   ------------------------------------------------------------------------- */
+.widget--greeting {
+  grid-column: 1 / -1; /* span full width on desktop */
+  text-align: center;
+}
+
+.greeting__time {
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+}
+
+.greeting__date {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  margin-top: var(--space-xs);
+}
+
+.greeting__message {
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+  font-weight: 500;
+  color: var(--color-accent);
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.greeting__name-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.greeting__name-label {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.greeting__name-controls {
+  display: flex;
+  gap: var(--space-sm);
+  max-width: 24rem;
+  width: 100%;
+}
+
+.greeting__name-input {
+  flex: 1;
+}
+
+/* -------------------------------------------------------------------------
+   Timer Widget
+   ------------------------------------------------------------------------- */
+.timer__display {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.timer__controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.timer__alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-accent);
+  color: var(--color-surface);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--space-md);
+  font-size: 0.875rem;
+}
+
+.timer__alert[hidden] {
+  display: none;
+}
+
+.timer__duration-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+  border-top: var(--border-width) solid var(--color-border);
+  padding-top: var(--space-md);
+}
+
+.timer__duration-label {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.timer__duration-controls {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.timer__duration-input {
+  width: 5rem;
+  flex-shrink: 0;
+}
+
+/* -------------------------------------------------------------------------
+   To-Do List Widget
+   ------------------------------------------------------------------------- */
+.todo__add-form {
+  margin-bottom: var(--space-md);
+}
+
+.todo__add-controls {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.todo__input {
+  flex: 1;
+}
+
+.todo__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.todo__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition-theme);
+}
+
+.todo__item--done .todo__label {
+  text-decoration: line-through;
+  color: var(--color-done-text);
+}
+
+.todo__checkbox {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.todo__label {
+  flex: 1;
+  font-size: 0.9375rem;
+  word-break: break-word;
+  color: var(--color-text-primary);
+  transition: color 0.15s ease, text-decoration 0.15s ease;
+}
+
+.todo__item-actions {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+/* Inline edit input for tasks */
+.todo__edit-input {
+  flex: 1;
+  font-size: 0.9375rem;
+}
+
+/* -------------------------------------------------------------------------
+   Quick Links Widget
+   ------------------------------------------------------------------------- */
+.quicklinks__add-form {
+  margin-bottom: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.quicklinks__form-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.quicklinks__label {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.quicklinks__input {
+  width: 100%;
+}
+
+.quicklinks__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.quicklink__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.quicklink__btn {
+  background-color: var(--color-accent);
+  color: var(--color-surface);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: var(--space-xs) var(--space-md);
+  font-family: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.quicklink__btn:hover,
+.quicklink__btn:focus-visible {
+  filter: brightness(1.1);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.quicklink__delete {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 2px var(--space-xs);
+  border-radius: var(--border-radius-sm);
+  transition: color 0.15s ease;
+}
+
+.quicklink__delete:hover,
+.quicklink__delete:focus-visible {
+  color: var(--color-text-primary);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------------------
+   Responsive — narrow viewports
+   ------------------------------------------------------------------------- */
+@media (max-width: 40rem) {
+  .dashboard {
+    grid-template-columns: 1fr;
+    padding: var(--space-lg) var(--space-md);
+    padding-top: calc(var(--space-lg) + 3rem);
+  }
+
+  .timer__controls {
+    flex-wrap: wrap;
+  }
+
+  .greeting__name-controls {
+    flex-direction: column;
+  }
+}

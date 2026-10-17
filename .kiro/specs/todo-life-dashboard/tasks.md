@@ -8,7 +8,7 @@ Implement a zero-dependency, client-side single-page web application using HTML,
 
 ## Tasks
 
-- [-] 1. Scaffold project structure and HTML skeleton
+- [x] 1. Scaffold project structure and HTML skeleton
   - Create `index.html` at the workspace root with the full HTML skeleton: `<html>`, `<head>`, `<body>`, and one section per widget (Greeting, Timer, To-Do List, Quick Links, Theme Toggle)
   - Link `css/style.css` and `js/app.js` in `index.html`
   - Create `css/style.css` with an empty rule-set placeholder
@@ -16,8 +16,8 @@ Implement a zero-dependency, client-side single-page web application using HTML,
   - Verify the file opens without errors in a browser via `file://` protocol
   - _Requirements: 14.1, 14.2, 14.4, 14.5, 14.7_
 
-- [~] 2. Implement StorageService and CSS theming foundation
-  - [~] 2.1 Implement `StorageService` inside the IIFE
+- [x] 2. Implement StorageService and CSS theming foundation
+  - [x] 2.1 Implement `StorageService` inside the IIFE
     - Write `get(key)` — `JSON.parse` wrapper returning `null` on any error
     - Write `set(key, value)` — `JSON.stringify` + write; catch `QuotaExceededError` and return `false`
     - Write `remove(key)`
@@ -30,14 +30,14 @@ Implement a zero-dependency, client-side single-page web application using HTML,
     - Use `fc.anything().filter(x => !Array.isArray(x))` for `tasks` and `quickLinks`
     - **Validates: Requirements 10.3, 11.7**
 
-  - [~] 2.3 Add CSS custom properties for light and dark themes in `css/style.css`
+  - [x] 2.3 Add CSS custom properties for light and dark themes in `css/style.css`
     - Define all `--color-*` variables on `:root` (light theme values)
     - Override variables on `html.theme-dark` (dark theme values)
     - Add base reset, body, and layout styles using only the custom properties
     - _Requirements: 13.3, 14.1_
 
-- [~] 3. Implement ThemeModule
-  - [~] 3.1 Implement `ThemeModule` inside the IIFE
+- [x] 3. Implement ThemeModule
+  - [x] 3.1 Implement `ThemeModule` inside the IIFE
     - Write `apply(theme)` — adds/removes `theme-dark` class on `document.documentElement`
     - Write `toggle()` — flips the active theme, calls `apply`, calls `StorageService.set('theme', …)`
     - Write `init(state)` — calls `apply(state.theme)`; attaches click listener to the Theme_Toggle button
@@ -57,8 +57,8 @@ Implement a zero-dependency, client-side single-page web application using HTML,
 - [ ] 4. Checkpoint — Ensure all tests pass
   - Run all tests written so far; confirm StorageService and ThemeModule behave correctly. Ask the user if questions arise.
 
-- [~] 5. Implement GreetingModule
-  - [~] 5.1 Implement pure helper functions `getGreeting(hour)`, `formatTime(date)`, `formatDate(date)`
+- [x] 5. Implement GreetingModule
+  - [x] 5.1 Implement pure helper functions `getGreeting(hour)`, `formatTime(date)`, `formatDate(date)`
     - `getGreeting`: returns `"Good Morning"` (05–11), `"Good Afternoon"` (12–17), `"Good Evening"` (18–20), `"Good Night"` (21–23, 00–04)
     - `formatTime`: returns HH:MM (24-hour, zero-padded)
     - `formatDate`: returns `"DayName, DD MonthName YYYY"` using the locale-independent day/month name arrays
@@ -69,7 +69,7 @@ Implement a zero-dependency, client-side single-page web application using HTML,
     - Use `fc.integer({ min: 0, max: 23 })` ; assert each result is one of the four valid phrases and matches boundary definitions
     - **Validates: Requirements 2.1, 2.2, 2.3, 2.4**
 
-  - [~] 5.3 Implement `GreetingModule.render(now, name)` and `scheduleNextTick()`
+  - [x] 5.3 Implement `GreetingModule.render(now, name)` and `scheduleNextTick()`
     - `render`: composes greeting string (with or without name + `!`), updates time, date, and greeting DOM elements
     - `scheduleNextTick`: calculates `msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds()` then calls `setTimeout` to call `render` + `scheduleNextTick` again
     - _Requirements: 1.2, 3.3, 3.4_
@@ -79,19 +79,19 @@ Implement a zero-dependency, client-side single-page web application using HTML,
     - Use `fc.string()` for phrase and `fc.option(fc.string())` for name; assert result ends with `"!"`, contains phrase, and if name is non-empty contains `", " + name`
     - **Validates: Requirements 3.3, 3.4**
 
-  - [~] 5.5 Implement `GreetingModule.saveName(raw)` and `GreetingModule.init(state)`
+  - [x] 5.5 Implement `GreetingModule.saveName(raw)` and `GreetingModule.init(state)`
     - `saveName`: trim input; if non-empty → persist to `localStorage` key `userName`, re-render; if empty → `StorageService.remove('userName')`, re-render; if whitespace-only with no prior name change intent → show inline validation message
     - `init`: renders once with `new Date()` and stored name; attaches save control listener; calls `scheduleNextTick()`
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
 
-- [~] 6. Implement TimerModule
-  - [ ] 6.1 Implement internal timer state and `renderDisplay(seconds)`, `showAlert(msg)`, `dismissAlert()`
+- [x] 6. Implement TimerModule
+  - [x] 6.1 Implement internal timer state and `renderDisplay(seconds)`, `showAlert(msg)`, `dismissAlert()`
     - Declare closure variables: `timerState = 'idle'`, `remainingSeconds`, `intervalId`
     - `renderDisplay`: formats seconds to MM:SS and updates the timer DOM element
     - `showAlert` / `dismissAlert`: shows/hides the on-screen alert element
     - _Requirements: 4.5, 4.6_
 
-  - [~] 6.2 Implement `start()`, `stop()`, `reset()`, `tick()`
+  - [x] 6.2 Implement `start()`, `stop()`, `reset()`, `tick()`
     - `start`: only when `idle` or `paused`; set `timerState = 'running'`; start `setInterval` calling `tick` every 1000 ms
     - `stop`: only when `running`; clear interval; set `timerState = 'paused'`
     - `reset`: clear interval; set `timerState = 'idle'`; restore `remainingSeconds` to `currentDuration * 60`; call `renderDisplay`; call `dismissAlert`
@@ -103,7 +103,7 @@ Implement a zero-dependency, client-side single-page web application using HTML,
     - Use `fc.integer({ min: 1, max: 90 })` for duration and `fc.constantFrom('idle', 'running', 'paused')` for initial state; assert `remainingSeconds === d * 60` after reset
     - **Validates: Requirements 4.4**
 
-  - [~] 6.4 Implement `applyNewDuration(mins)` and `TimerModule.init(state)`
+  - [x] 6.4 Implement `applyNewDuration(mins)` and `TimerModule.init(state)`
     - `applyNewDuration`: validate integer 1–90; if valid → `StorageService.set('sessionDuration', …)`; call `reset()`; if invalid → show inline validation message; clear message when input is modified to valid
     - `init`: set `remainingSeconds` from state; call `renderDisplay`; wire Start, Stop, Reset button listeners; wire duration-save control listener
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 5.1, 5.2, 5.3, 5.4, 5.5_
@@ -113,11 +113,11 @@ Implement a zero-dependency, client-side single-page web application using HTML,
     - Use `fc.integer()`, `fc.float()`, `fc.string()` as inputs; assert accepted iff integer in [1, 90]; assert timer state and localStorage unchanged for rejected values
     - **Validates: Requirements 5.1, 5.5**
 
-- [~] 7. Checkpoint — Ensure all tests pass
+- [x] 7. Checkpoint — Ensure all tests pass
   - Run all tests; confirm GreetingModule and TimerModule behave correctly. Ask the user if questions arise.
 
-- [~] 8. Implement TodoModule
-  - [~] 8.1 Implement `validateLabel(raw, excludeId)` and `renderTask(task)` / `renderList(tasks)`
+- [x] 8. Implement TodoModule
+  - [x] 8.1 Implement `validateLabel(raw, excludeId)` and `renderTask(task)` / `renderList(tasks)`
     - `validateLabel`: trim; reject if empty (return `{ ok: false, error: 'empty' }`); reject if duplicate case-insensitive match excluding `excludeId` (return `{ ok: false, error: 'duplicate' }`); else `{ ok: true }`
     - `renderTask`: create task DOM element with checkbox, label (strikethrough when `done`), edit button, delete button; wire per-task listeners
     - `renderList`: clear the list container; iterate tasks array and append `renderTask` results
@@ -133,7 +133,7 @@ Implement a zero-dependency, client-side single-page web application using HTML,
     - Use `fc.string()` for base label plus a case-variant; assert rejection and unchanged task list
     - **Validates: Requirements 6.3, 7.5**
 
-  - [~] 8.4 Implement `addTask(rawLabel)`, `persistTasks()`, and `TodoModule.init(state)`
+  - [x] 8.4 Implement `addTask(rawLabel)`, `persistTasks()`, and `TodoModule.init(state)`
     - `addTask`: call `validateLabel`; on error show inline message and return; generate `id` (Date.now().toString()), `createdAt` (ISO 8601 UTC), `done: false`; push to in-memory array; call `persistTasks`; call `renderList`; clear input field; clear validation message
     - `persistTasks`: call `StorageService.set('tasks', tasks)`; if `false` returned, show inline storage-error message
     - `init`: set in-memory tasks array from `state.tasks`; call `renderList`; wire add-form submit listener
@@ -144,7 +144,7 @@ Implement a zero-dependency, client-side single-page web application using HTML,
     - Use `fc.string({ minLength: 1 }).filter(s => s.trim().length > 0)` for valid labels; assert stored JSON contains a Task with the trimmed label
     - **Validates: Requirements 6.2, 6.5**
 
-  - [~] 8.6 Implement `editTask(id, rawNewLabel)`, `toggleTask(id)`, `deleteTask(id)`
+  - [x] 8.6 Implement `editTask(id, rawNewLabel)`, `toggleTask(id)`, `deleteTask(id)`
     - `editTask`: show edit input pre-filled with current label; on save validate via `validateLabel(raw, id)`; on success update label, persist, re-render; on empty/duplicate show inline message; on Escape/cancel restore original display without persisting
     - `toggleTask`: flip `done` boolean; call `persistTasks`; call `renderList`
     - `deleteTask`: splice task from array; call `persistTasks`; call `renderList`
@@ -160,29 +160,29 @@ Implement a zero-dependency, client-side single-page web application using HTML,
     - Use `fc.record({ id: fc.string(), label: fc.string(), done: fc.boolean(), createdAt: fc.string() })` array; serialize then hydrate; assert deep equality
     - **Validates: Requirements 10.1, 10.3**
 
-- [ ] 9. Checkpoint — Ensure all tests pass
+- [x] 9. Checkpoint — Ensure all tests pass
   - Run all tests; confirm TodoModule add, edit, toggle, delete, and persistence behave correctly. Ask the user if questions arise.
 
-- [~] 10. Implement QuickLinksModule
-  - [~] 10.1 Implement `validateUrl(raw)`, `renderLinks(links)`, and `persistLinks()`
+- [x] 10. Implement QuickLinksModule
+  - [x] 10.1 Implement `validateUrl(raw)`, `renderLinks(links)`, and `persistLinks()`
     - `validateUrl`: return `true` iff string starts with `http://` or `https://` and `length <= 2048`
     - `renderLinks`: clear quick-links container; create one button per link with label text; attach click listener opening URL in new tab (`window.open(url, '_blank')`); add delete button per link
     - `persistLinks`: call `StorageService.set('quickLinks', links)`
     - _Requirements: 11.5, 11.6, 12.1_
 
-  - [ ]* 10.2 Write property test for Quick Link URL validation
+  - [x] 10.2 Write property test for Quick Link URL validation
     - **Property 9: Quick Link URL validation**
     - Use `fc.string()` and valid URL arbitraries; assert `validateUrl` returns `true` iff starts with `http://` or `https://` and length ≤ 2048
     - **Validates: Requirements 11.4**
 
-  - [~] 10.3 Implement `addLink(rawLabel, rawUrl)`, `deleteLink(id)`, and `QuickLinksModule.init(state)`
+  - [x] 10.3 Implement `addLink(rawLabel, rawUrl)`, `deleteLink(id)`, and `QuickLinksModule.init(state)`
     - `addLink`: trim label and URL; validate label non-empty (else inline message on label input); validate URL via `validateUrl` (else inline message on URL input); generate `id`; push to array; call `persistLinks`; call `renderLinks`; clear form inputs
     - `deleteLink`: splice link from array; call `persistLinks`; call `renderLinks`
     - `init`: set in-memory links array from `state.quickLinks`; call `renderLinks`; wire add-form submit listener
     - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.6, 11.7, 12.2_
 
-- [~] 11. Wire all modules in the initialization routine
-  - [~] 11.1 Implement the top-level `init()` function inside the IIFE
+- [x] 11. Wire all modules in the initialization routine
+  - [x] 11.1 Implement the top-level `init()` function inside the IIFE
     - Call `StorageService.hydrate()` to get `AppState`
     - Call `ThemeModule.init(state)` — must run first (before render) to avoid flash of wrong theme
     - Call `GreetingModule.init(state)`, `TimerModule.init(state)`, `TodoModule.init(state)`, `QuickLinksModule.init(state)` in sequence
@@ -197,7 +197,7 @@ Implement a zero-dependency, client-side single-page web application using HTML,
     - Seed localStorage with valid `theme`, `userName`, `sessionDuration`, `tasks`, `quickLinks`; simulate `init()`; assert all widgets hydrate to the stored values
     - _Requirements: 10.1, 11.6, 13.5_
 
-- [~] 12. Final checkpoint — Ensure all tests pass
+- [ ] 12. Final checkpoint — Ensure all tests pass
   - Run the full test suite; open `index.html` via `file://` and visually verify all widgets. Ask the user if questions arise.
 
 ---
